@@ -7,4 +7,16 @@
     <color name="colorRed">#f00</color>
     <color name="colorGreen">#0f0</color>
     <color name="colorBlue">#00f</color>
+
+    <color name="colorBackground">#f6f6f6</color>
+
+    <color name="colorGameboardUnusedButton">#c9d6df</color>
+    <color name="colorGameboardBlackButton">#6a2c70</color>
+    <color name="colorGameboardWhiteButton">#f73859</color>
+
+    <color name="colorStartGameButton">#3f72af</color>
+
+    <color name="colorText">#40514e</color>
+
+
 </resources>

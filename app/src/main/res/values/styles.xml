@@ -8,16 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="gameButton" parent="Widget.AppCompat.Button">
-        <item name="android:textSize">20sp</item>
-        <item name="android:background">@color/colorBlue</item>
-        <item name="colorAccent">@color/colorRed</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:gravity">center</item>
+    <style name="gameButtonUnused" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/roundedbutton_unused</item>
+    </style>
 
+    <style name="gameButtonWhite" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/roundedbutton_white</item>
+    </style>
+
+    <style name="gameButtonBlack" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/roundedbutton_black</item>
+    </style>
+
+    <style name="startGameButton" parent="Widget.AppCompat.Button">
+        <item name="android:textSize">14sp</item>
+        <item name="android:background" >@drawable/start_game_button</item>
     </style>
 
 </resources>
