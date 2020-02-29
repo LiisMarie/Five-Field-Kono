@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">iti0213-2019s-hw01</string>
+
+    <string name="button_2_players">2 PLAYERS</string>
+    <string name="button_1_player_white">1 PLAYER BLUE</string>
+    <string name="button_1_player_black">1 PLAYER BLACK</string>
+    <string name="button_ai_vs_ai">AI VS AI</string>
+    <string name="toggle_off_black">BLACK</string>
+    <string name="toggle_on_blue">BLUE</string>
+
+    <string name="text_view_choose_starter">Choose starting player</string>
+    <string name="text_view_start_game">Start new game</string>
+    <string name="text_view_blue_player">Blue player</string>
+    <string name="text_view_black_player">Black player</string>
+    <string name="text_view_statistics">Statistics</string>
+    <string name="text_view_games_won">Games won</string>
+
 </resources>

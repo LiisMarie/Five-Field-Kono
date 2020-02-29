@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" android:color="@color/colorGameboardBlackButton">
+
+    <solid android:color="@color/colorGameboardBlackButton" />
+
+    <stroke
+        android:width="3dp"
+        android:color="@color/colorGameboardButtonStroke" />
+
+    <padding
+        android:bottom="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:top="1dp" />
+
+    <corners android:bottomRightRadius="50dp"
+        android:bottomLeftRadius="50dp"
+        android:topRightRadius="50dp"
+        android:topLeftRadius="50dp"/>
+
+</shape>

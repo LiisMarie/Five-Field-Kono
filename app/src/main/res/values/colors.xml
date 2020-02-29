@@ -8,13 +8,15 @@
     <color name="colorGreen">#0f0</color>
     <color name="colorBlue">#00f</color>
 
-    <color name="colorBackground">#f6f6f6</color>
+    <color name="colorBackground">#E0E0E0</color>
 
-    <color name="colorGameboardUnusedButton">#c9d6df</color>
-    <color name="colorGameboardBlackButton">#6a2c70</color>
-    <color name="colorGameboardWhiteButton">#f73859</color>
+    <color name="colorGameboardUnusedButton">#FAFAFA</color>
+    <color name="colorGameboardBlackButton">#263238</color>
+    <color name="colorGameboardWhiteButton">#81D4FA</color>
 
-    <color name="colorStartGameButton">#3f72af</color>
+    <color name="colorGameboardButtonStroke">#18FFFF</color>
+
+    <color name="colorStartGameButton">#8BC34A</color>
 
     <color name="colorText">#40514e</color>
 

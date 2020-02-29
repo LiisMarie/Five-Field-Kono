@@ -9,20 +9,25 @@
     </style>
 
     <style name="gameButtonUnused" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/roundedbutton_unused</item>
+        <item name="android:background">@drawable/button_unused</item>
     </style>
 
     <style name="gameButtonWhite" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/roundedbutton_white</item>
+        <item name="android:background">@drawable/button_white</item>
     </style>
 
     <style name="gameButtonBlack" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/roundedbutton_black</item>
+        <item name="android:background">@drawable/button_black</item>
     </style>
 
     <style name="startGameButton" parent="Widget.AppCompat.Button">
         <item name="android:textSize">14sp</item>
-        <item name="android:background" >@drawable/start_game_button</item>
+        <item name="android:background" >@drawable/button_start_game</item>
+    </style>
+
+    <style name="ToggleButton" parent="Base.Widget.AppCompat.Button">
+        <item name="android:textColor">@color/colorGameboardBlackButton</item>
+        <item name="colorAccent">@color/colorGameboardWhiteButton</item>
     </style>
 
 </resources>
