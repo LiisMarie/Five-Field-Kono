@@ -37,7 +37,7 @@
 
     <Button
         android:id="@+id/button11"
-        style="@style/gameButtonBlack"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
@@ -52,7 +52,7 @@
 
     <Button
         android:id="@+id/button12"
-        style="@style/gameButtonBlack"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="gameboardButtonOnClick"
@@ -65,7 +65,7 @@
 
     <Button
         android:id="@+id/button13"
-        style="@style/gameButtonBlack"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="gameboardButtonOnClick"
@@ -78,7 +78,7 @@
 
     <Button
         android:id="@+id/button14"
-        style="@style/gameButtonBlack"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="gameboardButtonOnClick"
@@ -91,7 +91,7 @@
 
     <Button
         android:id="@+id/button15"
-        style="@style/gameButtonBlack"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="gameboardButtonOnClick"
@@ -104,7 +104,7 @@
 
     <Button
         android:id="@+id/button21"
-        style="@style/gameButtonBlack"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
@@ -158,7 +158,7 @@
 
     <Button
         android:id="@+id/button25"
-        style="@style/gameButtonBlack"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="gameboardButtonOnClick"
@@ -238,7 +238,7 @@
 
     <Button
         android:id="@+id/button41"
-        style="@style/gameButtonWhite"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
@@ -292,7 +292,7 @@
 
     <Button
         android:id="@+id/button45"
-        style="@style/gameButtonWhite"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="gameboardButtonOnClick"
@@ -305,7 +305,7 @@
 
     <Button
         android:id="@+id/button51"
-        style="@style/gameButtonWhite"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
@@ -320,7 +320,7 @@
 
     <Button
         android:id="@+id/button52"
-        style="@style/gameButtonWhite"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="gameboardButtonOnClick"
@@ -333,7 +333,7 @@
 
     <Button
         android:id="@+id/button53"
-        style="@style/gameButtonWhite"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="gameboardButtonOnClick"
@@ -346,7 +346,7 @@
 
     <Button
         android:id="@+id/button54"
-        style="@style/gameButtonWhite"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="gameboardButtonOnClick"
@@ -359,7 +359,7 @@
 
     <Button
         android:id="@+id/button55"
-        style="@style/gameButtonWhite"
+        style="@style/gameButtonUnused"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="gameboardButtonOnClick"
