@@ -89,6 +89,11 @@ class MainActivity : AppCompatActivity() {
         outState.putIntegerArrayList("blackActiveButtons", generateIntegerArrayListOfButtons(gameLogic.blackActiveButtons))
         outState.putIntegerArrayList("whiteActiveButtons", generateIntegerArrayListOfButtons(gameLogic.whiteActiveButtons))
         outState.putIntegerArrayList("unusedActiveButtons", generateIntegerArrayListOfButtons(gameLogic.unusedActiveButtons))
+
+        if (gameLogic.gameboardPieceSelected != null) {
+            outState.putString("gameboardPieceSelected", gameLogic.gameboardPieceSelected.toString())
+        }
+
     }
 
     // generates list of buttons ids from buttons list
@@ -115,8 +120,10 @@ class MainActivity : AppCompatActivity() {
                 generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("unusedButtons")),
                 generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("blackActiveButtons")),
                 generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("whiteActiveButtons")),
-                generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("unusedActiveButtons"))
+                generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("unusedActiveButtons")),
+                savedInstanceState.getString("gameboardPieceSelected", "")
                 )
+            // gameboardPieceSelected
         }
     }
 
