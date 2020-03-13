@@ -5,6 +5,7 @@ import android.widget.Button
 import android.widget.TextView
 import kotlin.collections.ArrayList
 
+
 class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : TextView) {
     var textViewTurn : TextView = turn
     var textViewPlayerOneScore : TextView = playerOneScore  // black player
@@ -63,10 +64,7 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
         setStartingPlayer(toggleButtonIsChecked)
         updateTextViewTurn()
 
-        // TODO if ai starts the game
-        if (currentPlayer == "BLACK") {
-            aiTurn(currentPlayer)
-        }
+        if (currentPlayer == "BLACK") { aiTurn(currentPlayer) }
     }
 
     fun btnStartGame1PlayerBlack(toggleButtonIsChecked : Boolean) {
@@ -76,10 +74,7 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
         setStartingPlayer(toggleButtonIsChecked)
         updateTextViewTurn()
 
-        // TODO if ai starts the game
-        if (currentPlayer == "BLUE") {
-            aiTurn(currentPlayer)
-        }
+        if (currentPlayer == "BLUE") { aiTurn(currentPlayer) }
     }
 
     fun btnStartGameAiVsAi(toggleButtonIsChecked : Boolean) {
@@ -89,17 +84,13 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
         setStartingPlayer(toggleButtonIsChecked)
         updateTextViewTurn()
 
-        // TODO startgame
+        aiVsAi()
     }
 
+    // sets starting player in the beginning of the game
     private fun setStartingPlayer(toggleButtonIsChecked: Boolean) {
-        // toggleButtonChoosePlayer.isChecked  = false = BLACK
-        // toggleButtonChoosePlayer.isChecked  = true = BLUE
-        if (toggleButtonIsChecked) {
-            currentPlayer = "BLUE"
-        } else {
-            currentPlayer = "BLACK"
-        }
+        if (toggleButtonIsChecked) { currentPlayer = "BLUE" } // toggleButtonChoosePlayer.isChecked  = true = BLUE
+        else { currentPlayer = "BLACK" } // toggleButtonChoosePlayer.isChecked  = false = BLACK
     }
 
     // initial gameboard
@@ -113,75 +104,91 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
 
 
     /* START: AI LOGIC */
-    private fun aiTurn(player : String) {
-        endGameIfNoMorePossibleMoves()
-
+    private fun aiVsAi() {
+        // todo
+        uiLogic.changeTextViewText(textViewPlayerOneScore, "AI STRTED")
         if (currentGame != "NONE") {
-            var buttons = listOf<Button>()
-
-            if (player == "BLACK") {  // player == "BLACK"
-                buttons = blackButtons.map { it }
-            } else {  // player == "BLUE"
-                buttons = whiteButtons.map { it }
-            }
-
-            var winCounts = hashMapOf<ArrayList<Button>, Int>()
-            var initialMoves = ArrayList<ArrayList<Button>>()
-
-            for (button in buttons) {
-                var validMoves = findValidMovesForPiece(getButtonNameFromViewString(button.toString()))
-                for (move in validMoves) {
-                    var _move = arrayListOf<Button>(button, move)
-                    initialMoves.add(_move)
-                    winCounts[_move] = 0
-                }
-            }
-
-            for (move in initialMoves) {
-                var i = 0
-                while (i < 100) {
-                    val res = simulate()  // todo
-                    if (res == "WIN") {
-                        val winCounter = winCounts[move]
-                        if (winCounter != null) {
-                            winCounts[move] = winCounter + 2
-                        }
-                    } else if (res == "DRAW") {
-                        val winCounter = winCounts[move]
-                        if (winCounter != null) {
-                            winCounts[move] = winCounter + 1
-                        }
-                    }
-                    i++
-                }
-            }
-
-            // find the move that won the most of played games
-            var maxKey = initialMoves[0]
-            var maxValue = 0
-            for ((key, value) in winCounts) {
-                if (value > maxValue) {
-                    maxKey = key
-                    maxValue = value
-                }
-            }
-
-            // make move on actual gameboard
-            // maxKey = [buttonToMove, buttonWhereToMove]
-            makeAiMove(maxKey)
+            Thread.sleep(1_000)
+            aiTurn(currentPlayer)
         }
 
     }
 
+    private fun aiTurn(player : String) {
+        endGameIfNoMorePossibleMoves()
+
+        if (currentGame != "NONE") {
+            var currentPlayersButtons: List<Button>
+
+            if (player == "BLACK") {  // player == "BLACK"
+                currentPlayersButtons = blackButtons.map { it }
+            } else {  // player == "BLUE"
+                currentPlayersButtons = whiteButtons.map { it }
+            }
+
+            var bestValue: Int = -10
+            var bestMove: ArrayList<Button>? = null
+            for (button in currentPlayersButtons) {
+                var validMoves = findValidMovesForPiece(getButtonNameFromViewString(button.toString()))
+                for (move in validMoves) {
+                    val possibleMove = arrayListOf<Button>(button, move)
+                    val moveValue = calcAiMoveValue(player, possibleMove)
+                    if (bestMove == null) {
+                        bestMove = possibleMove
+                        bestValue = moveValue
+                    }
+                    if (moveValue > bestValue) {
+                        bestValue = moveValue
+                        bestMove = possibleMove
+                    }
+                }
+            }
+            // make move on actual gameboard
+            if (bestMove != null) { makeAiMove(bestMove) } // maxKey = [buttonToMove, buttonWhereToMove]
+        }
+
+    }
+
+    // calculate value for given player's move
+    private fun calcAiMoveValue(player: String, move: ArrayList<Button>) : Int {
+        val currentPos = getButtonNameFromViewString(move[0].toString()).substring(6).toInt()
+        val currentRow = currentPos.toString().substring(0, 1).toInt()
+        val newPos = getButtonNameFromViewString(move[1].toString()).substring(6).toInt()
+        val newRow = newPos.toString().substring(0, 1).toInt()
+        if (player == "BLACK") {
+            val desiredPos = arrayListOf(41, 45, 51, 52, 53, 54, 55)
+            if (desiredPos.contains(currentPos)) { return -1 }
+            if (desiredPos.contains(newPos)) { return 10 }
+            if (currentRow < newRow) {
+                if (newRow == 4) { return 4 }
+                else if (newRow == 3) { return 3 }
+                else if (newRow == 2) { return 2 }
+                else if (newRow == 1) { return 1 }
+            }
+        } else if (player == "BLUE" ) {
+            val desiredPos = arrayListOf(21, 25, 11, 12, 13, 14, 15)
+            if (desiredPos.contains(currentPos)) { return -1 }
+            if (desiredPos.contains(newPos)) { return 10 }
+            if (currentRow > newRow) {
+                if (newRow == 5) { return 1}
+                else if (newRow == 4) { return 2 }
+                else if (newRow == 3) { return 3 }
+                else if (newRow == 2) { return 4 }
+                else if (newRow == 1) { return 5 }
+            }
+        }
+        return 0
+    }
+
     // make ai move on the gameboard
-    // move = [buttonToMove, buttonWhereToMove]
-    private fun makeAiMove(move : ArrayList<Button>) {
+    private fun makeAiMove(move : ArrayList<Button>) {   // move = [buttonToMove, buttonWhereToMove]
         // make ai move and update the view
         if (currentPlayer == "BLACK") {
             blackButtons.remove(move[0])
             blackButtons.add(move[1])
             unusedButtons.remove(move[1])
             unusedButtons.add(move[0])
+            if (isWinner(currentPlayer) ) { endGame() }
             currentPlayer = "BLUE"
         }
         else {
@@ -189,34 +196,24 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
             whiteButtons.add(move[1])
             unusedButtons.remove(move[1])
             unusedButtons.add(move[0])
+            if (isWinner(currentPlayer) ) { endGame() }
             currentPlayer = "BLACK"
         }
-
-        emptyActiveButtonsLists()
-        colorRegularButtons()
-        colorActiveButtons()
-        updateTextViewTurn()
-
-    }
-
-    private fun simulate() : String {
-        // returns "LOST", "DRAW", "WIN"
-        // todo
-        return ""
+        emptyActiveColorAll()
+        if (currentGame != "NONE") { updateTextViewTurn() }
+/*
+        if (currentGame == "AIVSAI") {
+            aiVsAi()
+        }*/
     }
 
     /* END: AI LOGIC */
 
-
-    fun restoreGameState(
-        currentPlayer: String,
-        currentGame: String,
-        blackButtons: ArrayList<Button>,
-        whiteButtons: ArrayList<Button>,
-        unusedButtons: ArrayList<Button>,
-        blackActiveButtons: ArrayList<Button>,
-        whiteActiveButtons: ArrayList<Button>,
-        unusedActiveButtons: ArrayList<Button>,
+    // restores the state of the game
+    fun restoreGameState(currentPlayer: String, currentGame: String,
+        blackButtons: ArrayList<Button>, whiteButtons: ArrayList<Button>,
+        unusedButtons: ArrayList<Button>, blackActiveButtons: ArrayList<Button>,
+        whiteActiveButtons: ArrayList<Button>, unusedActiveButtons: ArrayList<Button>,
         gameboardPieceSelectedString: String
     ) {
         this.currentGame = currentGame
@@ -229,7 +226,6 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
         this.whiteActiveButtons = whiteActiveButtons
         this.unusedActiveButtons = unusedActiveButtons
 
-
         if (gameboardPieceSelectedString != "") {
             gameboardPieceSelected = findGameboardButtonByName(getButtonNameFromViewString(gameboardPieceSelectedString))
         }
@@ -238,42 +234,34 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
         colorRegularButtons()
         colorActiveButtons()
 
-        // TODO continue with gamelogic with 1 player
+        // continue with gamelogic - 1 player
+        if (currentGame == "ONEPLAYERWHITE" && currentPlayer == "BLACK") { aiTurn(currentPlayer) }
+        else if (currentGame == "ONEPLAYERBLACK" && currentPlayer == "BLUE") { aiTurn(currentPlayer) }
+
         // TODO continue with gamelogic with AI vs AI
+        // continue with gamelogic - AI vs AI
     }
 
 
     // handles gameboard button clicks when it's necessary
     fun gameBoardButtonClicked(view : View) {
-        //val viewString = view.toString()
-        //val clickedButtonString = viewString.substring(viewString.length - 9, viewString.length - 1)
-
         val clickedButton = findGameboardButtonById(view.id)
-
         if (currentGame != "NONE") {
 
-            // if 2 players play
-            if (currentGame == "TWOPLAYERS") {
+            if (currentGame == "TWOPLAYERS") { // if 2 players play
                 if (clickedButton != null) { playerTurn(clickedButton, view) }
 
             } else if (currentGame == "ONEPLAYERBLACK") {
-                if (clickedButton != null && currentPlayer == "BLACK") {
-                    // todo
-                    playerTurn(clickedButton, view)
-                }
+                if (clickedButton != null && currentPlayer == "BLACK") { playerTurn(clickedButton, view) }
 
             } else if (currentGame == "ONEPLAYERWHITE") {
-                if (clickedButton != null && currentPlayer == "BLUE") {
-                    // todo
-                    playerTurn(clickedButton, view)
-                }
+                if (clickedButton != null && currentPlayer == "BLUE") { playerTurn(clickedButton, view) }
 
             }
-
         }
-
     }
 
+    // regulates player turn
     private fun playerTurn(clickedButton : Button, view : View) {
         if (gameboardPieceSelected != null) {  // if player has chosen his piece and clicks on another button on the gameboard
             val localSelectedPiece = gameboardPieceSelected
@@ -289,6 +277,8 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
                     currentPlayer = "BLUE"
 
                     if (currentGame == "ONEPLAYERBLACK") {
+                        emptyActiveColorAll()
+                        gameboardPieceSelected = null
                         aiTurn(currentPlayer)
                     }
                 } else {
@@ -299,15 +289,15 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
                     currentPlayer = "BLACK"
 
                     if (currentGame == "ONEPLAYERWHITE") {
+                        emptyActiveColorAll()
+                        gameboardPieceSelected = null
                         aiTurn(currentPlayer)
                     }
                 }
 
             }
             if (currentGame != "NONE") { updateTextViewTurn() }
-            emptyActiveButtonsLists()
-            colorRegularButtons()
-            colorActiveButtons()
+            emptyActiveColorAll()
             gameboardPieceSelected = null
 
         } else {  // no gameboard button has been chosen
@@ -334,17 +324,13 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
             }
 
         }
-
         // if game is not over yet then check for the next move that are there any possible moves
-        // if there aren't then end the game
-        endGameIfNoMorePossibleMoves()
+        endGameIfNoMorePossibleMoves()  // if there aren't then end the game
     }
 
     // updates whose turn it is in text view
     private fun generateTextViewTurnText(): String {
-        if (!currentPlayer.equals("NONE")) {
-            return currentPlayer + " player's turn"
-        }
+        if (currentPlayer != "NONE") { return currentPlayer + " player's turn" }
         return "Start new game!"
     }
 
@@ -352,11 +338,8 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
     private fun endGameIfNoMorePossibleMoves() {
         if (currentGame != "NONE") {
             if (!isThereAnyValidMoves(currentPlayer)) {
-                if (currentPlayer == "BLACK") {
-                    currentPlayer = "BLUE"
-                } else {
-                    currentPlayer = "BLACK"
-                }
+                if (currentPlayer == "BLACK") { currentPlayer = "BLUE" }
+                else { currentPlayer = "BLACK" }
                 endGame()
             }
         }
@@ -383,15 +366,11 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
     private fun isThereAnyValidMoves(player: String) : Boolean {
         if (player == "BLACK") {
             for (button in blackButtons) {
-                if (findValidMovesForPiece(getButtonNameFromViewString(button.toString())).size != 0) {
-                    return true
-                }
+                if (findValidMovesForPiece(getButtonNameFromViewString(button.toString())).size != 0) { return true }
             }
         } else {
             for (button in whiteButtons) {
-                if (findValidMovesForPiece(getButtonNameFromViewString(button.toString())).size != 0) {
-                    return true
-                }
+                if (findValidMovesForPiece(getButtonNameFromViewString(button.toString())).size != 0) { return true }
             }
         }
         return false
@@ -400,20 +379,14 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
     // checks if given player has won the game
     private fun isWinner(player : String) : Boolean {
         if (player == "BLACK") {
-            val endForBlack = arrayListOf("button41", "button45", "button51", "button52",
-                "button53", "button54", "button55")
+            val endForBlack = arrayListOf("button41", "button45", "button51", "button52", "button53", "button54", "button55")
             for (button in blackButtons) {
-                if (!endForBlack.contains(getButtonNameFromViewString(button.toString()))) {
-                    return false
-                }
+                if (!endForBlack.contains(getButtonNameFromViewString(button.toString()))) { return false }
             }
         } else {
-            val endForWhite = arrayListOf("button11", "button12", "button13", "button14",
-                "button15", "button21", "button25")
+            val endForWhite = arrayListOf("button11", "button12", "button13", "button14", "button15", "button21", "button25")
             for (button in whiteButtons) {
-                if (!endForWhite.contains(getButtonNameFromViewString(button.toString()))) {
-                    return false
-                }
+                if (!endForWhite.contains(getButtonNameFromViewString(button.toString()))) { return false }
             }
         }
         return true
@@ -423,17 +396,11 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
     private fun findValidMovesForPiece(buttonNameString : String) : ArrayList<Button> {
         var validButtons = arrayListOf<Button>()
         val endNumber = buttonNameString.substring(buttonNameString.length - 2).toInt()
-        val buttonNames = arrayListOf("button" + (endNumber - 11).toString(),
-            "button" + (endNumber - 9).toString(),
-            "button" + (endNumber + 11).toString(),
-            "button" + (endNumber + 9).toString())
+        val buttonNames = arrayListOf("button" + (endNumber - 11).toString(), "button" + (endNumber - 9).toString(),
+            "button" + (endNumber + 11).toString(), "button" + (endNumber + 9).toString())
         for (buttonName in buttonNames) {
             val button = findGameboardButtonByName(buttonName)
-            if (button != null) {
-                if (unusedButtons.contains(button)) {
-                    validButtons.add(button)
-                }
-            }
+            if (button != null) { if (unusedButtons.contains(button)) { validButtons.add(button) } }
         }
         return validButtons
     }
@@ -445,42 +412,25 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
 
     // find button by its name,  for example: name = button11
     private fun findGameboardButtonByName(name: String) : Button? {
-        for (button in blackButtons) {
-            if (getButtonNameFromViewString(button.toString()) == name) {
-                return button
-            }
-        }
-        for (button in whiteButtons) {
-            if (getButtonNameFromViewString(button.toString()) == name) {
-                return button
-            }
-        }
-        for (button in unusedButtons) {
-            if (getButtonNameFromViewString(button.toString()) == name) {
-                return button
-            }
-        }
+        for (button in blackButtons) { if (getButtonNameFromViewString(button.toString()) == name) { return button } }
+        for (button in whiteButtons) { if (getButtonNameFromViewString(button.toString()) == name) { return button } }
+        for (button in unusedButtons) { if (getButtonNameFromViewString(button.toString()) == name) { return button } }
         return null
     }
 
     // takes in id and finds the button with corresponding id
     private fun findGameboardButtonById(viewId: Int) : Button? {
-        for (button in blackButtons) {
-            if (button.id == viewId) {
-                return button
-            }
-        }
-        for (button in whiteButtons) {
-            if (button.id == viewId) {
-                return button
-            }
-        }
-        for (button in unusedButtons) {
-            if (button.id == viewId) {
-                return button
-            }
-        }
+        for (button in blackButtons) { if (button.id == viewId) { return button } }
+        for (button in whiteButtons) { if (button.id == viewId) { return button } }
+        for (button in unusedButtons) { if (button.id == viewId) { return button } }
         return null
+    }
+
+    // empties active buttons list, colors regular and active buttons
+    private fun emptyActiveColorAll() {
+        emptyActiveButtonsLists()
+        colorRegularButtons()
+        colorActiveButtons()
     }
 
 }
