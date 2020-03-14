@@ -35,6 +35,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "lifecycle onCreate")
         setContentView(R.layout.activity_main)
+        if (savedInstanceState != null) {
+            //savedInstanceState.getString("currentPlayer", "NONE")
+            Log.d(TAG, "STARTINNGG  GUOPPPPP")
+        }
 
         gameLogic = GameLogic(textViewTurn, textViewPlayerOneScore, textViewPlayerTwoScore)
     }
@@ -89,6 +93,8 @@ class MainActivity : AppCompatActivity() {
         outState.putIntegerArrayList("blackActiveButtons", generateIntegerArrayListOfButtons(gameLogic.blackActiveButtons))
         outState.putIntegerArrayList("whiteActiveButtons", generateIntegerArrayListOfButtons(gameLogic.whiteActiveButtons))
         outState.putIntegerArrayList("unusedActiveButtons", generateIntegerArrayListOfButtons(gameLogic.unusedActiveButtons))
+        outState.putInt("playerOneScore", gameLogic.playerOneScore)
+        outState.putInt("playerTwoScore", gameLogic.playerTwoScore)
 
         if (gameLogic.gameboardPieceSelected != null) {
             outState.putString("gameboardPieceSelected", gameLogic.gameboardPieceSelected.toString())
@@ -111,20 +117,19 @@ class MainActivity : AppCompatActivity() {
 
         val currentGame = savedInstanceState.getString("currentGame", "NONE")
 
-        if (!currentGame.equals("NONE")) {
-            val currentPlayer = savedInstanceState.getString("currentPlayer", "NONE")
+        val currentPlayer = savedInstanceState.getString("currentPlayer", "NONE")
 
-            gameLogic.restoreGameState(currentPlayer, currentGame,
-                generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("blackButtons")),
-                generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("whiteButtons")),
-                generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("unusedButtons")),
-                generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("blackActiveButtons")),
-                generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("whiteActiveButtons")),
-                generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("unusedActiveButtons")),
-                savedInstanceState.getString("gameboardPieceSelected", "")
-                )
-            // gameboardPieceSelected
-        }
+        gameLogic.restoreGameState(currentPlayer, currentGame,
+            generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("blackButtons")),
+            generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("whiteButtons")),
+            generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("unusedButtons")),
+            generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("blackActiveButtons")),
+            generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("whiteActiveButtons")),
+            generateButtonsListOfIds(savedInstanceState.getIntegerArrayList("unusedActiveButtons")),
+            savedInstanceState.getString("gameboardPieceSelected", ""),
+            savedInstanceState.getInt("playerOneScore", 0),
+            savedInstanceState.getInt("playerTwoScore", 0)
+            )
     }
 
     // generates button list from buttons ids list
@@ -138,9 +143,6 @@ class MainActivity : AppCompatActivity() {
         return buttons
     }
 
-    /*
-        GAME
-     */
 
     /* INIT GAMES */
     fun btnStartGame2Players(view: View) {
@@ -161,6 +163,19 @@ class MainActivity : AppCompatActivity() {
     fun btnStartGameAiVsAi(view: View) {
         initGameStart()
         gameLogic.btnStartGameAiVsAi(toggleButtonChoosePlayer.isChecked)
+
+        uiLogic.changeTextViewText(textViewTurn, "AI vs AI game ongoing")
+
+        var i = 0
+        while (i < 500 && gameLogic.currentGame != "NONE") {
+            gameLogic.aiVsAi()
+            i++
+        }
+        if (gameLogic.currentGame != "NONE") {
+            gameLogic.currentGame = "NONE"
+            uiLogic.changeTextViewText(textViewTurn, "Couldn't finish within given time")
+        }
+
     }
 
     fun initGameStart() {
@@ -177,6 +192,5 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "Gameboard button clicked  " + view)
 
         gameLogic.gameBoardButtonClicked(view)
-        //gameLogic.makeActive(view)
     }
 }

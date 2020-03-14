@@ -25,6 +25,10 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
     var currentPlayer = "NONE"  // BLACK, BLUE, NONE
     var gameboardPieceSelected :Button? = null
 
+    var playerOneScore : Int = 0  // black player
+    var playerTwoScore : Int = 0  // blue player
+
+
     /* START: UI CHANGES*/
 
     private fun colorRegularButtons() {
@@ -41,6 +45,11 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
 
     private fun updateTextViewTurn() {
         uiLogic.changeTextViewText(textViewTurn, generateTextViewTurnText())
+    }
+
+    private fun updatePlayersScore() {
+        uiLogic.changeTextViewText(textViewPlayerOneScore, playerOneScore.toString())
+        uiLogic.changeTextViewText(textViewPlayerTwoScore, playerTwoScore.toString())
     }
 
     /* END: UI CHANGES*/
@@ -83,8 +92,7 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
         currentGame = "AIVSAI"
         setStartingPlayer(toggleButtonIsChecked)
         updateTextViewTurn()
-
-        aiVsAi()
+        //aiVsAi()
     }
 
     // sets starting player in the beginning of the game
@@ -104,13 +112,16 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
 
 
     /* START: AI LOGIC */
-    private fun aiVsAi() {
+    fun aiVsAi() {
         // todo
-        uiLogic.changeTextViewText(textViewPlayerOneScore, "AI STRTED")
-        if (currentGame != "NONE") {
-            Thread.sleep(1_000)
+        aiTurn(currentPlayer)
+        /*
+        while (i < 5 && currentGame != "NONE") {
             aiTurn(currentPlayer)
-        }
+            Thread.sleep(3_000)
+            i++
+        }*/
+
 
     }
 
@@ -149,33 +160,53 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
 
     }
 
-    // calculate value for given player's move
+    // calculate value for given ai player's move
     private fun calcAiMoveValue(player: String, move: ArrayList<Button>) : Int {
         val currentPos = getButtonNameFromViewString(move[0].toString()).substring(6).toInt()
-        val currentRow = currentPos.toString().substring(0, 1).toInt()
         val newPos = getButtonNameFromViewString(move[1].toString()).substring(6).toInt()
-        val newRow = newPos.toString().substring(0, 1).toInt()
         if (player == "BLACK") {
             val desiredPos = arrayListOf(41, 45, 51, 52, 53, 54, 55)
-            if (desiredPos.contains(currentPos)) { return -1 }
-            if (desiredPos.contains(newPos)) { return 10 }
-            if (currentRow < newRow) {
-                if (newRow == 4) { return 4 }
-                else if (newRow == 3) { return 3 }
-                else if (newRow == 2) { return 2 }
-                else if (newRow == 1) { return 1 }
-            }
+            if (desiredPos.contains(currentPos)) { return -10 }
+            if (desiredPos.contains(newPos)) { return 20 }
+
+            val zoneTwo = arrayListOf(42, 43, 44)
+            if (zoneTwo.contains(currentPos)) { return -8 }
+            if (zoneTwo.contains(newPos)) { return 18 }
+
+            val zoneThree = arrayListOf(31, 32, 33, 34, 35)
+            if (zoneThree.contains(currentPos)) { return -5 }
+            if (zoneThree.contains(newPos)) { return 15 }
+
+            val zoneFour = arrayListOf(21, 22, 23, 24, 25)
+            if (zoneFour.contains(currentPos)) { return -3 }
+            if (zoneFour.contains(newPos)) { return 10 }
+
+            val zoneFive = arrayListOf(11, 12, 13, 14, 15)
+            if (zoneFive.contains(currentPos)) { return -3 }
+            if (zoneFive.contains(newPos)) { return -15 }
+
+            return 0
+
         } else if (player == "BLUE" ) {
-            val desiredPos = arrayListOf(21, 25, 11, 12, 13, 14, 15)
-            if (desiredPos.contains(currentPos)) { return -1 }
-            if (desiredPos.contains(newPos)) { return 10 }
-            if (currentRow > newRow) {
-                if (newRow == 5) { return 1}
-                else if (newRow == 4) { return 2 }
-                else if (newRow == 3) { return 3 }
-                else if (newRow == 2) { return 4 }
-                else if (newRow == 1) { return 5 }
-            }
+            val desiredPos = arrayListOf(11, 12, 13, 14, 15, 21, 25)
+            if (desiredPos.contains(currentPos)) { return -10 }
+            if (desiredPos.contains(newPos)) { return 20 }
+
+            val zoneTwo = arrayListOf(22, 23, 24)
+            if (zoneTwo.contains(currentPos)) { return -8 }
+            if (zoneTwo.contains(newPos)) { return 18 }
+
+            val zoneThree = arrayListOf(31, 32, 33, 34, 35)
+            if (zoneThree.contains(currentPos)) { return -5 }
+            if (zoneThree.contains(newPos)) { return 15 }
+
+            val zoneFour = arrayListOf(41, 42, 43, 44, 45)
+            if (zoneFour.contains(currentPos)) { return -3 }
+            if (zoneFour.contains(newPos)) { return 10 }
+
+            val zoneFive = arrayListOf(51, 52, 53, 54, 55)
+            if (zoneFive.contains(currentPos)) { return -3 }
+            if (zoneFive.contains(newPos)) { return -15 }
         }
         return 0
     }
@@ -201,10 +232,7 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
         }
         emptyActiveColorAll()
         if (currentGame != "NONE") { updateTextViewTurn() }
-/*
-        if (currentGame == "AIVSAI") {
-            aiVsAi()
-        }*/
+
     }
 
     /* END: AI LOGIC */
@@ -214,7 +242,7 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
         blackButtons: ArrayList<Button>, whiteButtons: ArrayList<Button>,
         unusedButtons: ArrayList<Button>, blackActiveButtons: ArrayList<Button>,
         whiteActiveButtons: ArrayList<Button>, unusedActiveButtons: ArrayList<Button>,
-        gameboardPieceSelectedString: String
+        gameboardPieceSelectedString: String, oneScore: Int, twoScore: Int
     ) {
         this.currentGame = currentGame
         this.currentPlayer = currentPlayer
@@ -238,6 +266,9 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
         if (currentGame == "ONEPLAYERWHITE" && currentPlayer == "BLACK") { aiTurn(currentPlayer) }
         else if (currentGame == "ONEPLAYERBLACK" && currentPlayer == "BLUE") { aiTurn(currentPlayer) }
 
+        playerOneScore = oneScore
+        playerTwoScore = twoScore
+        updatePlayersScore()
         // TODO continue with gamelogic with AI vs AI
         // continue with gamelogic - AI vs AI
     }
@@ -349,10 +380,14 @@ class GameLogic ( turn : TextView, playerOneScore : TextView, playerTwoScore : T
     private fun endGame() {
         uiLogic.changeTextViewText(textViewTurn,currentPlayer + " won! Start a new game!")
         // todo SCORE LOGIC
+        if (currentPlayer == "BLACK") { playerOneScore ++ }
+        else if (currentPlayer == "BLUE") { playerTwoScore ++ }
+
         currentGame = "NONE"
         currentPlayer = "NONE"
         emptyActiveButtonsLists()
         colorRegularButtons()
+        updatePlayersScore()
     }
 
     // empties active buttons lists
