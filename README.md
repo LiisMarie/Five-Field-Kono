@@ -1,4 +1,4 @@
-#Kono
+# Kono
 
 Kono game in Kotlin
 
@@ -18,7 +18,7 @@ Samsung Galaxy S10 - portrait blue player's turn | Samsung Galaxy S10 - portrait
 <img src="Pictures/blue_players_turn.jpg" height="550px"> | <img src="Pictures/black_players_turn.jpg" height="550px">
 
 Samsung Galaxy S10 - portrait blue player won |
------------- | -------------
+------------ |
 <img src="Pictures/blue_player_won.jpg" height="550px"> |
 
 Samsung Galaxy S10 - portrait blue player's turn | Samsung Galaxy S10 - landscape blue player's turn
